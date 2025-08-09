@@ -1,3 +1,3 @@
 # Probability Demos
 
-- [Monty Hall Problem Simulation](knits/monty_hall.html)
+- [Monty Hall Problem Simulation](knits/monty_hall.md)

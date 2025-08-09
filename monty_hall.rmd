@@ -2,7 +2,9 @@
 title: "Monty Hall Problem Simulation"
 author: "Lucas Brizola Fontoura"
 date: "08/2025"
-output: html_document
+output: 
+  md_document:
+    variant: gfm
 enconding: UTF-8
 ---
 
