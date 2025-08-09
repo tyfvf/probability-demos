@@ -47,11 +47,11 @@ for (i in 1:tries) {
 
 cat("Days with same birthday:", same_birthday, "out of", tries, "\n")
 
-cat("Probability of two people sharing a birthday",
+cat("Probability of two people sharing a birthday:",
     same_birthday / tries,
     "(", (same_birthday / tries) * 100, "% chance)\n")
 
-cat("Probability of two people not sharing a birthday",
+cat("Probability of two people not sharing a birthday:",
     1 - (same_birthday / tries),
     "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
 ```
@@ -85,11 +85,11 @@ for (i in 2:30) {
   cat("Days with same birthday for", i, "people:",
       same_birthday, "out of", tries, "\n")
 
-  cat("Probability of in", i, "people someone sharing a birthday",
+  cat("Probability of in", i, "people someone sharing a birthday:",
       same_birthday / tries,
       "(", (same_birthday / tries) * 100, "% chance)\n")
 
-  cat("Probability of in", i, "people no one sharing a birthday",
+  cat("Probability of in", i, "people no one sharing a birthday:",
       1 - (same_birthday / tries),
       "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
 
