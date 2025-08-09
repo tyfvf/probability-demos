@@ -1,0 +1,104 @@
+---
+title: "Birthday Problem Simulation"
+author: "Lucas Brizola Fontoura"
+date: "08/2025"
+output: 
+  md_document:
+    variant: gfm
+enconding: UTF-8
+---
+
+# What is the Birthday Problem?
+The Birthday Problem is a famous problem in probability theory that asks how likely it is that in a group of people, at least two will share the same birthday.
+The problem is counterintuitive because it suggests that a relatively small group of people can have a high probability of sharing a birthday.
+
+### The question is: How many people do you need in a room for there to be a better than even chance that at least two people share a birthday?
+
+```{r}
+tries <- 10000
+verbose <- FALSE
+```
+
+```{r}
+# Simulate with 2 people only
+same_birthday <- 0
+people <- 2
+
+for (i in 1:tries) {
+
+  people_vector <- c()
+
+  for (j in 1:people) {
+
+    birthday <- sample(1:365, 1)
+    people_vector <- c(people_vector, birthday)
+
+    if (verbose) {
+      cat("Try", i, ":", j, "person's birthday is", birthday, "\n")
+    }
+
+  }
+
+  if (length(unique(people_vector)) < length(people_vector)) {
+    same_birthday <- same_birthday + 1
+  }
+
+}
+
+cat("Days with same birthday:", same_birthday, "out of", tries, "\n")
+
+cat("Probability of two people sharing a birthday",
+    same_birthday / tries,
+    "(", (same_birthday / tries) * 100, "% chance)\n")
+
+cat("Probability of two people not sharing a birthday",
+    1 - (same_birthday / tries),
+    "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
+```
+
+```{r}
+# Simulate from 2 to 30 people
+for (i in 2:30) {
+
+  same_birthday <- 0
+
+  for (j in 1:tries) {
+
+    people_vector <- c()
+
+    for (k in 1:i) {
+
+      birthday <- sample(1:365, 1)
+      people_vector <- c(people_vector, birthday)
+
+      if (verbose) {
+        cat("Try", j, ":", k, "person's birthday is", birthday, "\n")
+      }
+
+    }
+
+    if (length(unique(people_vector)) < length(people_vector)) {
+      same_birthday <- same_birthday + 1
+    }
+  }
+
+  cat("Days with same birthday for", i, "people:",
+      same_birthday, "out of", tries, "\n")
+
+  cat("Probability of in", i, "people someone sharing a birthday",
+      same_birthday / tries,
+      "(", (same_birthday / tries) * 100, "% chance)\n")
+
+  cat("Probability of in", i, "people no one sharing a birthday",
+      1 - (same_birthday / tries),
+      "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
+
+  cat("----------------------------------------------------------------\n")
+}
+```
+
+# Conclusion
+
+The simulation shows that as the number of people in a group increases, the probability of at least two people sharing a birthday also increases significantly.
+In fact, with just 23 people, there is over a 50% chance that at least two people share a birthday.
+This counterintuitive result highlights the surpring nature of probability and how out intuition can often lead us astray.
