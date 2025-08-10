@@ -1,3 +1,5 @@
+# The Birthday Problem Simulation
+
 ## Introduction
 
 The **Birthday Problem** asks:
@@ -10,12 +12,11 @@ Surprisingly, this probability reaches **over 50%** with just 23 people
 Here, we’ll explore both the *theorethical* calculation and a
 *simulation-based* approach.
 
-## Parameters - Try Changing Them!
+## Parameters - Try changing them!
 
 You can tweak these variables to see how the results change:
 
 ``` r
-# Adjustable parameters
 max_people <- 60  # Maximum group size to simulate
 tries <- 1000     # Number of simulation trials per group size
 verbose <- FALSE  # Set to TRUE to see simulation details
@@ -27,9 +28,7 @@ set.seed(42)      # Set seed for reproducibility
 The idea:
 
 1.  Randomly assign birthdays (1-365) to n people.
-
 2.  Check if any birthday appears more than once.
-
 3.  Repeat many times to estimate the probability.
 
 ``` r
@@ -42,7 +41,7 @@ results <- data.frame(
 ``` r
 # Function to simulate one group
 simulate_group <- function(n_people) {
-  birthdays <- sample(1:365, n_people, replace = TRUE)
+  birthdays <- sample(1:365, n_people, replace = TRUE) # 1.
 
   if (verbose) {
     cat(
@@ -50,12 +49,12 @@ simulate_group <- function(n_people) {
     )
   }
 
-  length(unique(birthdays)) < length(birthdays)
+  length(unique(birthdays)) < length(birthdays) # 2.
 }
 ```
 
 ``` r
-for (n_people in 2:max_people) {
+for (n_people in 2:max_people) { # 3.
   same_birthday <- sum(replicate(tries, simulate_group(n_people = n_people)))
   probability <- same_birthday / tries
   results <- rbind(
