@@ -1,21 +1,32 @@
-# What is the Birthday Problem?
+## Introduction
 
-The Birthday Problem is a famous problem in probability theory that asks
-how likely it is that in a group of people, at least two will share the
-same birthday. The problem is counterintuitive because it suggests that
-a relatively small group of people can have a high probability of
-sharing a birthday.
+The **Birthday Problem** asks:
 
-### The question is: How many people do you need in a room for there to be a better than even chance that at least two people share a birthday?
+> In a group of $`n`$ people, what is the probability that at least two
+> of them share the same birthday?
+
+Surprisingly, this probability reaches **over 50%** with just 23 people
+— far less than most people expect.  
+Here, we’ll explore both the *theorethical* calculation and a
+*simulation-based* approach.
+
+## Parameters - Try Changing Them!
+
+You can tweak these variables to see how the results change:
 
 ``` r
-set.seed(42) # Set seed for reproducibility
-verbose <- FALSE # Set to TRUE to see simulation details
-
-# Number of simulation trials
-# (the bigger, the closer to the theoretical probability)
-tries <- 30
+# Adjustable parameters
+max_people <- 60  # Maximum group size to simulate
+tries <- 1000     # Number of simulation trials per group size
+verbose <- FALSE  # Set to TRUE to see simulation details
+set.seed(42)      # Set seed for reproducibility
 ```
+
+## Simulation approach
+
+The idea: 1. Randomly assign birthdays (1-365) to n people. 2. Check if
+any birthday appears more than once. 3. Repeat many times to estimate
+the probability.
 
 ``` r
 results <- data.frame(
@@ -40,8 +51,7 @@ simulate_group <- function(n_people) {
 ```
 
 ``` r
-# Loop for 2 to 50 people
-for (n_people in 2:50) {
+for (n_people in 2:max_people) {
   same_birthday <- sum(replicate(tries, simulate_group(n_people = n_people)))
   probability <- same_birthday / tries
   results <- rbind(
@@ -56,70 +66,92 @@ for (n_people in 2:50) {
 }
 ```
 
-    ## For 2 people, the simulated probability of shared birthday is 0 
-    ## For 3 people, the simulated probability of shared birthday is 0.0333 
-    ## For 4 people, the simulated probability of shared birthday is 0 
-    ## For 5 people, the simulated probability of shared birthday is 0.0333 
-    ## For 6 people, the simulated probability of shared birthday is 0.0667 
-    ## For 7 people, the simulated probability of shared birthday is 0.1 
-    ## For 8 people, the simulated probability of shared birthday is 0.0333 
-    ## For 9 people, the simulated probability of shared birthday is 0.0333 
-    ## For 10 people, the simulated probability of shared birthday is 0.1667 
-    ## For 11 people, the simulated probability of shared birthday is 0.1 
-    ## For 12 people, the simulated probability of shared birthday is 0.1333 
-    ## For 13 people, the simulated probability of shared birthday is 0.3667 
-    ## For 14 people, the simulated probability of shared birthday is 0.2333 
-    ## For 15 people, the simulated probability of shared birthday is 0.4 
-    ## For 16 people, the simulated probability of shared birthday is 0.3333 
-    ## For 17 people, the simulated probability of shared birthday is 0.3 
-    ## For 18 people, the simulated probability of shared birthday is 0.3 
-    ## For 19 people, the simulated probability of shared birthday is 0.4333 
-    ## For 20 people, the simulated probability of shared birthday is 0.4667 
-    ## For 21 people, the simulated probability of shared birthday is 0.3667 
-    ## For 22 people, the simulated probability of shared birthday is 0.6 
-    ## For 23 people, the simulated probability of shared birthday is 0.4 
-    ## For 24 people, the simulated probability of shared birthday is 0.4667 
-    ## For 25 people, the simulated probability of shared birthday is 0.6333 
-    ## For 26 people, the simulated probability of shared birthday is 0.6 
-    ## For 27 people, the simulated probability of shared birthday is 0.4333 
-    ## For 28 people, the simulated probability of shared birthday is 0.7333 
-    ## For 29 people, the simulated probability of shared birthday is 0.6667 
-    ## For 30 people, the simulated probability of shared birthday is 0.6667 
-    ## For 31 people, the simulated probability of shared birthday is 0.7 
-    ## For 32 people, the simulated probability of shared birthday is 0.8333 
-    ## For 33 people, the simulated probability of shared birthday is 0.7667 
-    ## For 34 people, the simulated probability of shared birthday is 0.8 
-    ## For 35 people, the simulated probability of shared birthday is 0.9333 
-    ## For 36 people, the simulated probability of shared birthday is 0.8667 
-    ## For 37 people, the simulated probability of shared birthday is 0.9333 
-    ## For 38 people, the simulated probability of shared birthday is 0.8333 
-    ## For 39 people, the simulated probability of shared birthday is 0.9667 
-    ## For 40 people, the simulated probability of shared birthday is 0.7667 
-    ## For 41 people, the simulated probability of shared birthday is 0.9 
-    ## For 42 people, the simulated probability of shared birthday is 0.9333 
-    ## For 43 people, the simulated probability of shared birthday is 0.9 
-    ## For 44 people, the simulated probability of shared birthday is 0.9333 
-    ## For 45 people, the simulated probability of shared birthday is 0.9667 
-    ## For 46 people, the simulated probability of shared birthday is 0.9333 
-    ## For 47 people, the simulated probability of shared birthday is 0.9667 
-    ## For 48 people, the simulated probability of shared birthday is 0.9 
-    ## For 49 people, the simulated probability of shared birthday is 0.9667 
-    ## For 50 people, the simulated probability of shared birthday is 0.9667
+    ## For 2 people, the simulated probability of shared birthday is 0.003 
+    ## For 3 people, the simulated probability of shared birthday is 0.015 
+    ## For 4 people, the simulated probability of shared birthday is 0.017 
+    ## For 5 people, the simulated probability of shared birthday is 0.029 
+    ## For 6 people, the simulated probability of shared birthday is 0.04 
+    ## For 7 people, the simulated probability of shared birthday is 0.052 
+    ## For 8 people, the simulated probability of shared birthday is 0.077 
+    ## For 9 people, the simulated probability of shared birthday is 0.101 
+    ## For 10 people, the simulated probability of shared birthday is 0.091 
+    ## For 11 people, the simulated probability of shared birthday is 0.139 
+    ## For 12 people, the simulated probability of shared birthday is 0.155 
+    ## For 13 people, the simulated probability of shared birthday is 0.189 
+    ## For 14 people, the simulated probability of shared birthday is 0.223 
+    ## For 15 people, the simulated probability of shared birthday is 0.242 
+    ## For 16 people, the simulated probability of shared birthday is 0.302 
+    ## For 17 people, the simulated probability of shared birthday is 0.321 
+    ## For 18 people, the simulated probability of shared birthday is 0.371 
+    ## For 19 people, the simulated probability of shared birthday is 0.378 
+    ## For 20 people, the simulated probability of shared birthday is 0.399 
+    ## For 21 people, the simulated probability of shared birthday is 0.435 
+    ## For 22 people, the simulated probability of shared birthday is 0.493 
+    ## For 23 people, the simulated probability of shared birthday is 0.509 
+    ## For 24 people, the simulated probability of shared birthday is 0.535 
+    ## For 25 people, the simulated probability of shared birthday is 0.546 
+    ## For 26 people, the simulated probability of shared birthday is 0.622 
+    ## For 27 people, the simulated probability of shared birthday is 0.637 
+    ## For 28 people, the simulated probability of shared birthday is 0.663 
+    ## For 29 people, the simulated probability of shared birthday is 0.663 
+    ## For 30 people, the simulated probability of shared birthday is 0.697 
+    ## For 31 people, the simulated probability of shared birthday is 0.719 
+    ## For 32 people, the simulated probability of shared birthday is 0.755 
+    ## For 33 people, the simulated probability of shared birthday is 0.772 
+    ## For 34 people, the simulated probability of shared birthday is 0.818 
+    ## For 35 people, the simulated probability of shared birthday is 0.823 
+    ## For 36 people, the simulated probability of shared birthday is 0.822 
+    ## For 37 people, the simulated probability of shared birthday is 0.847 
+    ## For 38 people, the simulated probability of shared birthday is 0.872 
+    ## For 39 people, the simulated probability of shared birthday is 0.871 
+    ## For 40 people, the simulated probability of shared birthday is 0.885 
+    ## For 41 people, the simulated probability of shared birthday is 0.897 
+    ## For 42 people, the simulated probability of shared birthday is 0.903 
+    ## For 43 people, the simulated probability of shared birthday is 0.912 
+    ## For 44 people, the simulated probability of shared birthday is 0.936 
+    ## For 45 people, the simulated probability of shared birthday is 0.933 
+    ## For 46 people, the simulated probability of shared birthday is 0.943 
+    ## For 47 people, the simulated probability of shared birthday is 0.959 
+    ## For 48 people, the simulated probability of shared birthday is 0.966 
+    ## For 49 people, the simulated probability of shared birthday is 0.961 
+    ## For 50 people, the simulated probability of shared birthday is 0.967 
+    ## For 51 people, the simulated probability of shared birthday is 0.978 
+    ## For 52 people, the simulated probability of shared birthday is 0.982 
+    ## For 53 people, the simulated probability of shared birthday is 0.982 
+    ## For 54 people, the simulated probability of shared birthday is 0.981 
+    ## For 55 people, the simulated probability of shared birthday is 0.985 
+    ## For 56 people, the simulated probability of shared birthday is 0.993 
+    ## For 57 people, the simulated probability of shared birthday is 0.986 
+    ## For 58 people, the simulated probability of shared birthday is 0.991 
+    ## For 59 people, the simulated probability of shared birthday is 0.991 
+    ## For 60 people, the simulated probability of shared birthday is 0.993
+
+## Theorethical approach
+
+Mathematically, the probability that **no one** shares a birthday is:
+``` math
+P_{\text{no shared birthday}}(n) = \frac{365}{365} \times \frac{364}{365} \times \frac{363}{365} \times \ldots \times \frac{365 - n + 1}{365}
+```
+Thus, the probability that **at least two people share a birthday** is:
+``` math
+P_{\text{at least one shared birthday}}(n) = 1 - P{\text{no shared birthday}}(n)
+```
 
 ``` r
 # Theorethical probability function
-theoretical_probability <- function(n_people) {
+theorethical_probability <- function(n_people) {
   1 - prod((365:(365 - n_people + 1)) / 365)
 }
 ```
 
 ``` r
 results <- results %>%
-  mutate(theoretical_probability = sapply(people, theoretical_probability))
+  mutate(theorethical_probability = sapply(people, theorethical_probability))
 ```
 
+## Comparing Simulation & Theory
+
 ``` r
-# Plotting the results
 ggplot(results, aes(x = people)) +
   geom_line(
     aes(y = probability, color = "Simulated Probability"),
@@ -127,7 +159,7 @@ ggplot(results, aes(x = people)) +
   ) +
   geom_point(aes(y = probability, color = "Simulated Probability")) +
   geom_line(
-    aes(y = theoretical_probability, color = "Theoretical Probability"),
+    aes(y = theorethical_probability, color = "Theorethical Probability"),
     linetype = "dashed",
     linewidth = 1
   ) +
@@ -154,13 +186,18 @@ ggplot(results, aes(x = people)) +
   theme_minimal()
 ```
 
-![](images/birthday.png)<!-- -->
+![](images/birthday-1.png)<!-- -->
 
-# Conclusion
+## Results & Insights
 
-The simulation shows that as the number of people in a group increases,
-the probability of at least two people sharing a birthday also increases
-significantly. In fact, with just 23 people, there is over a 50% chance
-that at least two people share a birthday. This counterintuitive result
-highlights the surpring nature of probability and how out intuition can
-often lead us astray.
+- Both methods agree closely, especially as the number of trials
+  increases.
+- The simulation adds randomness, so results may vary slightly each run.
+- Even with **23 people**, the probability exceeds **50%**.
+- By 60 people, the probability is above **99%**
+
+## Conclusion
+
+The Birthday Problem is a great example of counterintuitive probability.
+Simulations like this help us verify theoretical results and build
+intuition for probability concepts.

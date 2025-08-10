@@ -8,11 +8,14 @@ output:
 enconding: UTF-8
 ---
 
-# What is the Birthday Problem?
-The Birthday Problem is a famous problem in probability theory that asks how likely it is that in a group of people, at least two will share the same birthday.
-The problem is counterintuitive because it suggests that a relatively small group of people can have a high probability of sharing a birthday.
+## Introduction
 
-### The question is: How many people do you need in a room for there to be a better than even chance that at least two people share a birthday?
+The **Birthday Problem** asks:
+
+> In a group of \(n\) people, what is the probability that at least two of them share the same birthday?
+
+Surprisingly, this probability reaches **over 50%** with just 23 people — far less than most people expect.  
+Here, we'll explore both the *theorethical* calculation and a *simulation-based* approach.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Load necessary libraries
@@ -20,14 +23,23 @@ library(dplyr)
 library(ggplot2)
 ```
 
-```{r}
-set.seed(42) # Set seed for reproducibility
-verbose <- FALSE # Set to TRUE to see simulation details
+## Parameters - Try Changing Them!
 
-# Number of simulation trials
-# (the bigger, the closer to the theorethical probability)
-tries <- 30
+You can tweak these variables to see how the results change:
+
+```{r, setup}
+# Adjustable parameters
+max_people <- 60  # Maximum group size to simulate
+tries <- 1000     # Number of simulation trials per group size
+verbose <- FALSE  # Set to TRUE to see simulation details
+set.seed(42)      # Set seed for reproducibility
 ```
+
+## Simulation approach
+The idea:
+1. Randomly assign birthdays (1-365) to n people.
+2. Check if any birthday appears more than once.
+3. Repeat many times to estimate the probability.
 
 ```{r}
 results <- data.frame(
@@ -52,8 +64,7 @@ simulate_group <- function(n_people) {
 ```
 
 ```{r}
-# Loop for 2 to 50 people
-for (n_people in 2:50) {
+for (n_people in 2:max_people) {
   same_birthday <- sum(replicate(tries, simulate_group(n_people = n_people)))
   probability <- same_birthday / tries
   results <- rbind(
@@ -68,6 +79,12 @@ for (n_people in 2:50) {
 }
 ```
 
+## Theorethical approach
+Mathematically, the probability that **no one** shares a birthday is:
+\[P_{\text{no shared birthday}}(n) = \frac{365}{365} \times \frac{364}{365} \times \frac{363}{365} \times \ldots \times \frac{365 - n + 1}{365}\]
+Thus, the probability that **at least two people share a birthday** is:
+\[P_{\text{at least one shared birthday}}(n) = 1 - P{\text{no shared birthday}}(n)\]
+
 ```{r}
 # Theorethical probability function
 theorethical_probability <- function(n_people) {
@@ -80,8 +97,9 @@ results <- results %>%
   mutate(theorethical_probability = sapply(people, theorethical_probability))
 ```
 
+## Comparing Simulation & Theory
+
 ```{r}
-# Plotting the results
 ggplot(results, aes(x = people)) +
   geom_line(
     aes(y = probability, color = "Simulated Probability"),
@@ -116,8 +134,13 @@ ggplot(results, aes(x = people)) +
   theme_minimal()
 ```
 
-# Conclusion
+## Results & Insights
+- Both methods agree closely, especially as the number of trials increases.
+- The simulation adds randomness, so results may vary slightly each run.
+- Even with **23 people**, the probability exceeds **50%**.
+- By 60 people, the probability is above **99%**
 
-The simulation shows that as the number of people in a group increases, the probability of at least two people sharing a birthday also increases significantly.
-In fact, with just 23 people, there is over a 50% chance that at least two people share a birthday.
-This counterintuitive result highlights the surprising nature of probability and how our intuition can often lead us astray.
+## Conclusion
+
+The Birthday Problem is a great example of counterintuitive probability.
+Simulations like this help us verify theoretical results and build intuition for probability concepts.
