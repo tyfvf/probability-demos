@@ -24,9 +24,13 @@ set.seed(42)      # Set seed for reproducibility
 
 ## Simulation approach
 
-The idea: 1. Randomly assign birthdays (1-365) to n people. 2. Check if
-any birthday appears more than once. 3. Repeat many times to estimate
-the probability.
+The idea:
+
+1.  Randomly assign birthdays (1-365) to n people.
+
+2.  Check if any birthday appears more than once.
+
+3.  Repeat many times to estimate the probability.
 
 ``` r
 results <- data.frame(
@@ -134,7 +138,7 @@ P_{\text{no shared birthday}}(n) = \frac{365}{365} \times \frac{364}{365} \times
 ```
 Thus, the probability that **at least two people share a birthday** is:
 ``` math
-P_{\text{at least one shared birthday}}(n) = 1 - P{\text{no shared birthday}}(n)
+P_{\text{at least one shared birthday}}(n) = 1 - P_{\text{no shared birthday}}(n)
 ```
 
 ``` r
