@@ -9,214 +9,152 @@ sharing a birthday.
 ### The question is: How many people do you need in a room for there to be a better than even chance that at least two people share a birthday?
 
 ``` r
-tries <- 10000
-verbose <- FALSE
+set.seed(42) # Set seed for reproducibility
+verbose <- FALSE # Set to TRUE to see simulation details
+
+# Number of simulation trials
+# (the bigger, the closer to the theoretical probability)
+tries <- 30
 ```
 
 ``` r
-# Simulate with 2 people only
-same_birthday <- 0
-people <- 2
+results <- data.frame(
+  people = integer(),
+  probability = numeric()
+)
+```
 
-for (i in 1:tries) {
+``` r
+# Function to simulate one group
+simulate_group <- function(n_people) {
+  birthdays <- sample(1:365, n_people, replace = TRUE)
 
-  people_vector <- c()
-
-  for (j in 1:people) {
-
-    birthday <- sample(1:365, 1)
-    people_vector <- c(people_vector, birthday)
-
-    if (verbose) {
-      cat("Try", i, ":", j, "person's birthday is", birthday, "\n")
-    }
-
+  if (verbose) {
+    cat(
+      "Simulating group of", n_people, "people with birthdays:", birthdays, "\n"
+    )
   }
 
-  if (length(unique(people_vector)) < length(people_vector)) {
-    same_birthday <- same_birthday + 1
-  }
-
-}
-
-cat("Days with same birthday:", same_birthday, "out of", tries, "\n")
-```
-
-    ## Days with same birthday: 31 out of 10000
-
-``` r
-cat("Probability of two people sharing a birthday:",
-    same_birthday / tries,
-    "(", (same_birthday / tries) * 100, "% chance)\n")
-```
-
-    ## Probability of two people sharing a birthday: 0.0031 ( 0.31 % chance)
-
-``` r
-cat("Probability of two people not sharing a birthday:",
-    1 - (same_birthday / tries),
-    "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
-```
-
-    ## Probability of two people not sharing a birthday: 0.9969 ( 99.69 % chance)
-
-``` r
-# Simulate from 2 to 30 people
-for (i in 2:30) {
-
-  same_birthday <- 0
-
-  for (j in 1:tries) {
-
-    people_vector <- c()
-
-    for (k in 1:i) {
-
-      birthday <- sample(1:365, 1)
-      people_vector <- c(people_vector, birthday)
-
-      if (verbose) {
-        cat("Try", j, ":", k, "person's birthday is", birthday, "\n")
-      }
-
-    }
-
-    if (length(unique(people_vector)) < length(people_vector)) {
-      same_birthday <- same_birthday + 1
-    }
-  }
-
-  cat("Days with same birthday for", i, "people:",
-      same_birthday, "out of", tries, "\n")
-
-  cat("Probability of in", i, "people someone sharing a birthday:",
-      same_birthday / tries,
-      "(", (same_birthday / tries) * 100, "% chance)\n")
-
-  cat("Probability of in", i, "people no one sharing a birthday:",
-      1 - (same_birthday / tries),
-      "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
-
-  cat("----------------------------------------------------------------\n")
+  length(unique(birthdays)) < length(birthdays)
 }
 ```
 
-    ## Days with same birthday for 2 people: 30 out of 10000 
-    ## Probability of in 2 people someone sharing a birthday: 0.003 ( 0.3 % chance)
-    ## Probability of in 2 people no one sharing a birthday: 0.997 ( 99.7 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 3 people: 69 out of 10000 
-    ## Probability of in 3 people someone sharing a birthday: 0.0069 ( 0.69 % chance)
-    ## Probability of in 3 people no one sharing a birthday: 0.9931 ( 99.31 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 4 people: 164 out of 10000 
-    ## Probability of in 4 people someone sharing a birthday: 0.0164 ( 1.64 % chance)
-    ## Probability of in 4 people no one sharing a birthday: 0.9836 ( 98.36 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 5 people: 269 out of 10000 
-    ## Probability of in 5 people someone sharing a birthday: 0.0269 ( 2.69 % chance)
-    ## Probability of in 5 people no one sharing a birthday: 0.9731 ( 97.31 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 6 people: 418 out of 10000 
-    ## Probability of in 6 people someone sharing a birthday: 0.0418 ( 4.18 % chance)
-    ## Probability of in 6 people no one sharing a birthday: 0.9582 ( 95.82 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 7 people: 569 out of 10000 
-    ## Probability of in 7 people someone sharing a birthday: 0.0569 ( 5.69 % chance)
-    ## Probability of in 7 people no one sharing a birthday: 0.9431 ( 94.31 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 8 people: 744 out of 10000 
-    ## Probability of in 8 people someone sharing a birthday: 0.0744 ( 7.44 % chance)
-    ## Probability of in 8 people no one sharing a birthday: 0.9256 ( 92.56 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 9 people: 958 out of 10000 
-    ## Probability of in 9 people someone sharing a birthday: 0.0958 ( 9.58 % chance)
-    ## Probability of in 9 people no one sharing a birthday: 0.9042 ( 90.42 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 10 people: 1175 out of 10000 
-    ## Probability of in 10 people someone sharing a birthday: 0.1175 ( 11.75 % chance)
-    ## Probability of in 10 people no one sharing a birthday: 0.8825 ( 88.25 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 11 people: 1401 out of 10000 
-    ## Probability of in 11 people someone sharing a birthday: 0.1401 ( 14.01 % chance)
-    ## Probability of in 11 people no one sharing a birthday: 0.8599 ( 85.99 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 12 people: 1646 out of 10000 
-    ## Probability of in 12 people someone sharing a birthday: 0.1646 ( 16.46 % chance)
-    ## Probability of in 12 people no one sharing a birthday: 0.8354 ( 83.54 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 13 people: 1924 out of 10000 
-    ## Probability of in 13 people someone sharing a birthday: 0.1924 ( 19.24 % chance)
-    ## Probability of in 13 people no one sharing a birthday: 0.8076 ( 80.76 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 14 people: 2195 out of 10000 
-    ## Probability of in 14 people someone sharing a birthday: 0.2195 ( 21.95 % chance)
-    ## Probability of in 14 people no one sharing a birthday: 0.7805 ( 78.05 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 15 people: 2481 out of 10000 
-    ## Probability of in 15 people someone sharing a birthday: 0.2481 ( 24.81 % chance)
-    ## Probability of in 15 people no one sharing a birthday: 0.7519 ( 75.19 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 16 people: 2913 out of 10000 
-    ## Probability of in 16 people someone sharing a birthday: 0.2913 ( 29.13 % chance)
-    ## Probability of in 16 people no one sharing a birthday: 0.7087 ( 70.87 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 17 people: 3210 out of 10000 
-    ## Probability of in 17 people someone sharing a birthday: 0.321 ( 32.1 % chance)
-    ## Probability of in 17 people no one sharing a birthday: 0.679 ( 67.9 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 18 people: 3443 out of 10000 
-    ## Probability of in 18 people someone sharing a birthday: 0.3443 ( 34.43 % chance)
-    ## Probability of in 18 people no one sharing a birthday: 0.6557 ( 65.57 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 19 people: 3842 out of 10000 
-    ## Probability of in 19 people someone sharing a birthday: 0.3842 ( 38.42 % chance)
-    ## Probability of in 19 people no one sharing a birthday: 0.6158 ( 61.58 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 20 people: 4021 out of 10000 
-    ## Probability of in 20 people someone sharing a birthday: 0.4021 ( 40.21 % chance)
-    ## Probability of in 20 people no one sharing a birthday: 0.5979 ( 59.79 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 21 people: 4443 out of 10000 
-    ## Probability of in 21 people someone sharing a birthday: 0.4443 ( 44.43 % chance)
-    ## Probability of in 21 people no one sharing a birthday: 0.5557 ( 55.57 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 22 people: 4743 out of 10000 
-    ## Probability of in 22 people someone sharing a birthday: 0.4743 ( 47.43 % chance)
-    ## Probability of in 22 people no one sharing a birthday: 0.5257 ( 52.57 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 23 people: 4981 out of 10000 
-    ## Probability of in 23 people someone sharing a birthday: 0.4981 ( 49.81 % chance)
-    ## Probability of in 23 people no one sharing a birthday: 0.5019 ( 50.19 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 24 people: 5393 out of 10000 
-    ## Probability of in 24 people someone sharing a birthday: 0.5393 ( 53.93 % chance)
-    ## Probability of in 24 people no one sharing a birthday: 0.4607 ( 46.07 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 25 people: 5713 out of 10000 
-    ## Probability of in 25 people someone sharing a birthday: 0.5713 ( 57.13 % chance)
-    ## Probability of in 25 people no one sharing a birthday: 0.4287 ( 42.87 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 26 people: 5925 out of 10000 
-    ## Probability of in 26 people someone sharing a birthday: 0.5925 ( 59.25 % chance)
-    ## Probability of in 26 people no one sharing a birthday: 0.4075 ( 40.75 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 27 people: 6275 out of 10000 
-    ## Probability of in 27 people someone sharing a birthday: 0.6275 ( 62.75 % chance)
-    ## Probability of in 27 people no one sharing a birthday: 0.3725 ( 37.25 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 28 people: 6537 out of 10000 
-    ## Probability of in 28 people someone sharing a birthday: 0.6537 ( 65.37 % chance)
-    ## Probability of in 28 people no one sharing a birthday: 0.3463 ( 34.63 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 29 people: 6808 out of 10000 
-    ## Probability of in 29 people someone sharing a birthday: 0.6808 ( 68.08 % chance)
-    ## Probability of in 29 people no one sharing a birthday: 0.3192 ( 31.92 % chance)
-    ## ----------------------------------------------------------------
-    ## Days with same birthday for 30 people: 7088 out of 10000 
-    ## Probability of in 30 people someone sharing a birthday: 0.7088 ( 70.88 % chance)
-    ## Probability of in 30 people no one sharing a birthday: 0.2912 ( 29.12 % chance)
-    ## ----------------------------------------------------------------
+``` r
+# Loop for 2 to 50 people
+for (n_people in 2:50) {
+  same_birthday <- sum(replicate(tries, simulate_group(n_people = n_people)))
+  probability <- same_birthday / tries
+  results <- rbind(
+    results,
+    data.frame(people = n_people, probability = probability)
+  )
+
+  cat(
+    "For", n_people, "people, the simulated probability of shared birthday is",
+    round(probability, 4), "\n"
+  )
+}
+```
+
+    ## For 2 people, the simulated probability of shared birthday is 0 
+    ## For 3 people, the simulated probability of shared birthday is 0.0333 
+    ## For 4 people, the simulated probability of shared birthday is 0 
+    ## For 5 people, the simulated probability of shared birthday is 0.0333 
+    ## For 6 people, the simulated probability of shared birthday is 0.0667 
+    ## For 7 people, the simulated probability of shared birthday is 0.1 
+    ## For 8 people, the simulated probability of shared birthday is 0.0333 
+    ## For 9 people, the simulated probability of shared birthday is 0.0333 
+    ## For 10 people, the simulated probability of shared birthday is 0.1667 
+    ## For 11 people, the simulated probability of shared birthday is 0.1 
+    ## For 12 people, the simulated probability of shared birthday is 0.1333 
+    ## For 13 people, the simulated probability of shared birthday is 0.3667 
+    ## For 14 people, the simulated probability of shared birthday is 0.2333 
+    ## For 15 people, the simulated probability of shared birthday is 0.4 
+    ## For 16 people, the simulated probability of shared birthday is 0.3333 
+    ## For 17 people, the simulated probability of shared birthday is 0.3 
+    ## For 18 people, the simulated probability of shared birthday is 0.3 
+    ## For 19 people, the simulated probability of shared birthday is 0.4333 
+    ## For 20 people, the simulated probability of shared birthday is 0.4667 
+    ## For 21 people, the simulated probability of shared birthday is 0.3667 
+    ## For 22 people, the simulated probability of shared birthday is 0.6 
+    ## For 23 people, the simulated probability of shared birthday is 0.4 
+    ## For 24 people, the simulated probability of shared birthday is 0.4667 
+    ## For 25 people, the simulated probability of shared birthday is 0.6333 
+    ## For 26 people, the simulated probability of shared birthday is 0.6 
+    ## For 27 people, the simulated probability of shared birthday is 0.4333 
+    ## For 28 people, the simulated probability of shared birthday is 0.7333 
+    ## For 29 people, the simulated probability of shared birthday is 0.6667 
+    ## For 30 people, the simulated probability of shared birthday is 0.6667 
+    ## For 31 people, the simulated probability of shared birthday is 0.7 
+    ## For 32 people, the simulated probability of shared birthday is 0.8333 
+    ## For 33 people, the simulated probability of shared birthday is 0.7667 
+    ## For 34 people, the simulated probability of shared birthday is 0.8 
+    ## For 35 people, the simulated probability of shared birthday is 0.9333 
+    ## For 36 people, the simulated probability of shared birthday is 0.8667 
+    ## For 37 people, the simulated probability of shared birthday is 0.9333 
+    ## For 38 people, the simulated probability of shared birthday is 0.8333 
+    ## For 39 people, the simulated probability of shared birthday is 0.9667 
+    ## For 40 people, the simulated probability of shared birthday is 0.7667 
+    ## For 41 people, the simulated probability of shared birthday is 0.9 
+    ## For 42 people, the simulated probability of shared birthday is 0.9333 
+    ## For 43 people, the simulated probability of shared birthday is 0.9 
+    ## For 44 people, the simulated probability of shared birthday is 0.9333 
+    ## For 45 people, the simulated probability of shared birthday is 0.9667 
+    ## For 46 people, the simulated probability of shared birthday is 0.9333 
+    ## For 47 people, the simulated probability of shared birthday is 0.9667 
+    ## For 48 people, the simulated probability of shared birthday is 0.9 
+    ## For 49 people, the simulated probability of shared birthday is 0.9667 
+    ## For 50 people, the simulated probability of shared birthday is 0.9667
+
+``` r
+# Theorethical probability function
+theoretical_probability <- function(n_people) {
+  1 - prod((365:(365 - n_people + 1)) / 365)
+}
+```
+
+``` r
+results <- results %>%
+  mutate(theoretical_probability = sapply(people, theoretical_probability))
+```
+
+``` r
+# Plotting the results
+ggplot(results, aes(x = people)) +
+  geom_line(
+    aes(y = probability, color = "Simulated Probability"),
+    linewidth = 1.2
+  ) +
+  geom_point(aes(y = probability, color = "Simulated Probability")) +
+  geom_line(
+    aes(y = theoretical_probability, color = "Theoretical Probability"),
+    linetype = "dashed",
+    linewidth = 1
+  ) +
+  geom_vline(xintercept = 23, linetype = "dotted", color = "red") +
+  annotate(
+    "text",
+    x = 23,
+    y = 0.55,
+    label = "~50% at 23 people",
+    color = "red",
+    vjust = -0.5
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Birthday Problem Simulation",
+    subtitle = paste(
+      "Simulation vs. Theory (", tries, " trials each)",
+      sep = ""
+    ),
+    x = "Number of People",
+    y = "Probability of Shared Birthday",
+    color = "Legend"
+  ) +
+  theme_minimal()
+```
+
+![](images/birthday.png)<!-- -->
 
 # Conclusion
 

@@ -14,87 +14,106 @@ The problem is counterintuitive because it suggests that a relatively small grou
 
 ### The question is: How many people do you need in a room for there to be a better than even chance that at least two people share a birthday?
 
-```{r}
-tries <- 10000
-verbose <- FALSE
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
 ```
 
 ```{r}
-# Simulate with 2 people only
-same_birthday <- 0
-people <- 2
+set.seed(42) # Set seed for reproducibility
+verbose <- FALSE # Set to TRUE to see simulation details
 
-for (i in 1:tries) {
-
-  people_vector <- c()
-
-  for (j in 1:people) {
-
-    birthday <- sample(1:365, 1)
-    people_vector <- c(people_vector, birthday)
-
-    if (verbose) {
-      cat("Try", i, ":", j, "person's birthday is", birthday, "\n")
-    }
-
-  }
-
-  if (length(unique(people_vector)) < length(people_vector)) {
-    same_birthday <- same_birthday + 1
-  }
-
-}
-
-cat("Days with same birthday:", same_birthday, "out of", tries, "\n")
-
-cat("Probability of two people sharing a birthday:",
-    same_birthday / tries,
-    "(", (same_birthday / tries) * 100, "% chance)\n")
-
-cat("Probability of two people not sharing a birthday:",
-    1 - (same_birthday / tries),
-    "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
+# Number of simulation trials
+# (the bigger, the closer to the theoretical probability)
+tries <- 30
 ```
 
 ```{r}
-# Simulate from 2 to 30 people
-for (i in 2:30) {
+results <- data.frame(
+  people = integer(),
+  probability = numeric()
+)
+```
 
-  same_birthday <- 0
+```{r}
+# Function to simulate one group
+simulate_group <- function(n_people) {
+  birthdays <- sample(1:365, n_people, replace = TRUE)
 
-  for (j in 1:tries) {
-
-    people_vector <- c()
-
-    for (k in 1:i) {
-
-      birthday <- sample(1:365, 1)
-      people_vector <- c(people_vector, birthday)
-
-      if (verbose) {
-        cat("Try", j, ":", k, "person's birthday is", birthday, "\n")
-      }
-
-    }
-
-    if (length(unique(people_vector)) < length(people_vector)) {
-      same_birthday <- same_birthday + 1
-    }
+  if (verbose) {
+    cat(
+      "Simulating group of", n_people, "people with birthdays:", birthdays, "\n"
+    )
   }
 
-  cat("Days with same birthday for", i, "people:",
-      same_birthday, "out of", tries, "\n")
-
-  cat("Probability of in", i, "people someone sharing a birthday:",
-      same_birthday / tries,
-      "(", (same_birthday / tries) * 100, "% chance)\n")
-
-  cat("Probability of in", i, "people no one sharing a birthday:",
-      1 - (same_birthday / tries),
-      "(", (1 - (same_birthday / tries)) * 100, "% chance)\n")
-
-  cat("----------------------------------------------------------------\n")
+  length(unique(birthdays)) < length(birthdays)
 }
+```
+
+```{r}
+# Loop for 2 to 50 people
+for (n_people in 2:50) {
+  same_birthday <- sum(replicate(tries, simulate_group(n_people = n_people)))
+  probability <- same_birthday / tries
+  results <- rbind(
+    results,
+    data.frame(people = n_people, probability = probability)
+  )
+
+  cat(
+    "For", n_people, "people, the simulated probability of shared birthday is",
+    round(probability, 4), "\n"
+  )
+}
+```
+
+```{r}
+# Theorethical probability function
+theoretical_probability <- function(n_people) {
+  1 - prod((365:(365 - n_people + 1)) / 365)
+}
+```
+
+```{r}
+results <- results %>%
+  mutate(theoretical_probability = sapply(people, theoretical_probability))
+```
+
+```{r}
+# Plotting the results
+ggplot(results, aes(x = people)) +
+  geom_line(
+    aes(y = probability, color = "Simulated Probability"),
+    linewidth = 1.2
+  ) +
+  geom_point(aes(y = probability, color = "Simulated Probability")) +
+  geom_line(
+    aes(y = theoretical_probability, color = "Theoretical Probability"),
+    linetype = "dashed",
+    linewidth = 1
+  ) +
+  geom_vline(xintercept = 23, linetype = "dotted", color = "red") +
+  annotate(
+    "text",
+    x = 23,
+    y = 0.55,
+    label = "~50% at 23 people",
+    color = "red",
+    vjust = -0.5
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Birthday Problem Simulation",
+    subtitle = paste(
+      "Simulation vs. Theory (", tries, " trials each)",
+      sep = ""
+    ),
+    x = "Number of People",
+    y = "Probability of Shared Birthday",
+    color = "Legend"
+  ) +
+  theme_minimal()
 ```
 
 # Conclusion
