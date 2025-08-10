@@ -25,7 +25,7 @@ set.seed(42) # Set seed for reproducibility
 verbose <- FALSE # Set to TRUE to see simulation details
 
 # Number of simulation trials
-# (the bigger, the closer to the theoretical probability)
+# (the bigger, the closer to the theorethical probability)
 tries <- 30
 ```
 
@@ -70,14 +70,14 @@ for (n_people in 2:50) {
 
 ```{r}
 # Theorethical probability function
-theoretical_probability <- function(n_people) {
+theorethical_probability <- function(n_people) {
   1 - prod((365:(365 - n_people + 1)) / 365)
 }
 ```
 
 ```{r}
 results <- results %>%
-  mutate(theoretical_probability = sapply(people, theoretical_probability))
+  mutate(theorethical_probability = sapply(people, theorethical_probability))
 ```
 
 ```{r}
@@ -89,7 +89,7 @@ ggplot(results, aes(x = people)) +
   ) +
   geom_point(aes(y = probability, color = "Simulated Probability")) +
   geom_line(
-    aes(y = theoretical_probability, color = "Theoretical Probability"),
+    aes(y = theorethical_probability, color = "Theorethical Probability"),
     linetype = "dashed",
     linewidth = 1
   ) +
@@ -120,4 +120,4 @@ ggplot(results, aes(x = people)) +
 
 The simulation shows that as the number of people in a group increases, the probability of at least two people sharing a birthday also increases significantly.
 In fact, with just 23 people, there is over a 50% chance that at least two people share a birthday.
-This counterintuitive result highlights the surpring nature of probability and how out intuition can often lead us astray.
+This counterintuitive result highlights the surprising nature of probability and how our intuition can often lead us astray.
