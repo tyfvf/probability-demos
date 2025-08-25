@@ -157,7 +157,7 @@ ggplot(results, aes(x = seq_len(nrow(results)))) +
   transition_reveal(seq_len(nrow(results)))
 ```
 
-![](coin_flip_files/figure-gfm/unnamed-chunk-6-1.gif)<!-- -->
+![](images/coin_flip-1.gif)<!-- -->
 
 ### Extension: Biased coin
 
